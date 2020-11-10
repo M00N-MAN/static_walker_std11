@@ -1,4 +1,5 @@
 #include <tuple>
+#include <array>
 #include <cassert>
 #include <iostream>
 #include <type_traits>
@@ -142,19 +143,19 @@ void range_test_v(const Container &c)
 int main()
 {
     get_test(std::make_tuple(1,'a', 42, 13.37));
-    std::cout << std::endl;
+    std::cout << '\n';
     get_test(std::array<int, 5U>{ 6, 7, 8, 9, 10 });
-    std::cout << std::endl;
+    std::cout << '\n';
     get_test_v(std::make_tuple(1,'a', 42, 13.37));
-    std::cout << std::endl;
+    std::cout << '\n';
     get_test_v(std::array<int, 5U>{ 6, 7, 8, 9, 10 });
-    std::cout << std::endl;
+    std::cout << '\n';
     range_test(std::make_tuple(1,'a', 42, 13.37));
-    std::cout << std::endl;
+    std::cout << '\n';
     range_test(std::array<int, 5U>{ 6, 7, 8, 9, 10 });
-    std::cout << std::endl;
+    std::cout << '\n';
     range_test_v(std::make_tuple(1,'a', 42, 13.37));
-    std::cout << std::endl;
+    std::cout << '\n';
     range_test_v(std::array<int, 5U>{ 6, 7, 8, 9, 10 });
 
     return 0;
