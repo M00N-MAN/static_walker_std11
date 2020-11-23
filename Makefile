@@ -10,6 +10,7 @@ LDFLAGS =
 OUTPUT_DIR = ../$(PROJECT_DIR)/bin
 OUTPUT = $(OUTPUT_DIR)/$(EXE_FILE)
 CPPFLAGS = -ggdb -std=c++11 -Wextra -Wall -pedantic
+//CPPFLAGS = -Os -std=c++11 -Wextra -Wall -pedantic -s
 SRC_DIR := ../$(PROJECT_DIR)
 OBJ_DIR := $(OUTPUT_DIR)
 SRC_FILES := $(wildcard $(SRC_DIR)/*.cpp)
