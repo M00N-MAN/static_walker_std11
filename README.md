@@ -9,17 +9,19 @@ this static_walker allows almost the same feature as std::integer_sequence does 
  - based on pattern visitor with the compile time recursion (access time O(log2(n))
  - it walks over the tuple and array, but with C++11
 
+Capabilities:
 * custom & range based
-* runtime enumeration
 * std::tuple and std::array
-* optimised log2n recursion
-* lambdas & void/non void functors + streaming
-* variadic parameters
-* C++11
-* streaming
+* log2n and linear
+* lambdas & void/non-void functors
+* passing variadic parameters
+* std::ostream
 * NVI for childs
+* pure C++11  
 
-example of sending tuple/array to a stream:  
+Examples:
+
+sending tuple/array to a stream:  
 ```cpp
 #include "StreamSerialize.hxx" //includes StaticWalker.hxx
 //...
@@ -36,7 +38,7 @@ or just
 rm -vf *.o walker.exe && g++ *.cpp -Wall -Wextra -std=c++11 -pedantic -o walker.exe && ./walker.exe
 ```
 
-example of walking via tuple/array with custom order:  
+walking via tuple/array with custom order:  
 ```cpp
 #include "StreamSerialize.hxx" //includes StaticWalker.hxx
 
@@ -52,7 +54,7 @@ void test_runtime_get_return(Container &&c,Args &&...args)
 test_runtime_get_no_return(std::make_tuple((void *)0xFF, 3.14,std::array<char, 3>{ 'x','y','z' }, 8, 'x'),' ');
 ```
 
-btw: if you need just to serialize data in usual direct order then it is better to use StaticWalker::runtime_range(..) instead of calling StaticWalker::runtime_get(..) in a for. It will reduce the stack stack
+btw, if you need just to serialize data in usual direct order then it is better to use StaticWalker::runtime_range(..) instead of calling StaticWalker::runtime_get(..) in a loop becouse it will reduce the stack:
 ```cpp
 #include "StreamSerialize.hxx"
 ...
@@ -66,10 +68,10 @@ void test_runtime_range(Container &&c,Args &&...args)
 test_runtime_range(std::make_tuple(3.14, '3', "DA",11,(void *)0xFF));
 ```
 
-for more details please refer to RunDemo function's code in main.cpp...
+for more details, please, refer to a code of RunDemo() function at main.cpp...
 
 Good luck and never stop:)
 
 [Open online]: https://wandbox.org/permlink/QDKQv2EK8Y1OiIxm
 
-#enum #tuple #c++11
+#runtime #variadic #template #recoursive #enumerate #std::tuple #std::array #C++11
