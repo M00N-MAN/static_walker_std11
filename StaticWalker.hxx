@@ -6,27 +6,30 @@
 #include <utility>
 
 namespace StaticWalkerImplNs_
-{
+{//almost the same feature as integer_sequence does in C++14:
+ //- based on pattern visitor with the compile time recursion (access time O(log2(n))
+ //- walks over the tuple and array, but with C++11
+
 template<std::size_t LEFT, std::size_t RIGHT>
 struct get_impl
 {
     template<typename Container, typename Functor, typename ...Args>
     static typename std::enable_if<std::is_same<typename std::result_of<Functor(/*1st type is dummy*/char,Args...)>::type, void>::value, void>::type
-    logWalk(Container &&tuple, std::size_t index, Functor &&fun, Args &&...args)
+    log2Walk(Container &&tuple, std::size_t index, Functor &&fun, Args &&...args)
     {
         static constexpr std::size_t MIDDLE = (RIGHT - LEFT) / 2 + LEFT;
-        if      (index < MIDDLE)     get_impl<LEFT , MIDDLE>::logWalk(tuple, index, fun, std::forward<Args>(args)...);
-        else if (index > MIDDLE)     get_impl<MIDDLE, RIGHT>::logWalk(tuple, index, fun, std::forward<Args>(args)...);
+        if      (index < MIDDLE)     get_impl<LEFT , MIDDLE>::log2Walk(tuple, index, fun, std::forward<Args>(args)...);
+        else if (index > MIDDLE)     get_impl<MIDDLE, RIGHT>::log2Walk(tuple, index, fun, std::forward<Args>(args)...);
         else /* (index == MIDDLE) */ std::forward<Functor>(fun)(std::get<MIDDLE>(std::forward<Container>(tuple)), std::forward<Args>(args)...);
     }
 
     template<typename Container, typename Functor, typename ...Args>
     static typename std::enable_if<!std::is_same<typename std::result_of<Functor(/*1st type is dummy*/char,Args...)>::type, void>::value, typename std::result_of<Functor(/*1st type is dummy*/char,Args...)>::type>::type
-    logWalk(Container &&tuple, std::size_t index, Functor &&fun, Args &&...args)
+    log2Walk(Container &&tuple, std::size_t index, Functor &&fun, Args &&...args)
     {
         static constexpr std::size_t MIDDLE = (RIGHT - LEFT) / 2 + LEFT;
-        if      (index < MIDDLE)     return get_impl<LEFT , MIDDLE>::logWalk(tuple, index, fun, std::forward<Args>(args)...);
-        else if (index > MIDDLE)     return get_impl<MIDDLE, RIGHT>::logWalk(tuple, index, fun, std::forward<Args>(args)...);
+        if      (index < MIDDLE)     return get_impl<LEFT , MIDDLE>::log2Walk(tuple, index, fun, std::forward<Args>(args)...);
+        else if (index > MIDDLE)     return get_impl<MIDDLE, RIGHT>::log2Walk(tuple, index, fun, std::forward<Args>(args)...);
         //else /* (index == MIDDLE) */
         return std::forward<Functor>(fun)(std::get<MIDDLE>(std::forward<Container>(tuple)), std::forward<Args>(args)...);
     }
@@ -61,7 +64,7 @@ runtime_get(Container &&tuple, std::size_t idx, Functor &&fun, Args &&...args)
 {
     static constexpr std::size_t tupleSize=std::tuple_size<typename std::decay<Container>::type>::value;
     assert(tupleSize && idx < tupleSize);
-    StaticWalkerImplNs_::get_impl<0,tupleSize>::logWalk(tuple, idx, fun, std::forward<Args>(args)...);
+    StaticWalkerImplNs_::get_impl<0,tupleSize>::log2Walk(tuple, idx, fun, std::forward<Args>(args)...);
 }
 
 template<typename Container, typename Functor, typename ...Args>
@@ -70,7 +73,7 @@ runtime_get(Container &&tuple, std::size_t idx, Functor &&fun, Args &&...args)
 {
     static constexpr std::size_t tupleSize=std::tuple_size<typename std::decay<Container>::type>::value;
     assert(tupleSize && idx < tupleSize);
-    return StaticWalkerImplNs_::get_impl<0,tupleSize>::logWalk(tuple, idx, fun, std::forward<Args>(args)...);
+    return StaticWalkerImplNs_::get_impl<0,tupleSize>::log2Walk(tuple, idx, fun, std::forward<Args>(args)...);
 }
 
 template<typename Container,typename Functor, typename ...Args>
