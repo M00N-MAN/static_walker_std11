@@ -5,9 +5,19 @@ Project: [static_walker_std11][Open online]
 slogan: simple runtime enumeration of std::tuple and std::array via optimized recursion using pure C++11
 
 Description:
-static_walker allows almost the same feature as std::integer_sequence does in C++14, but:
+this static_walker allows almost the same feature as std::integer_sequence does in C++14, but:
  - based on pattern visitor with the compile time recursion (access time O(log2(n))
  - it walks over the tuple and array, but with C++11
+
+* custom & range based
+* runtime enumeration
+* std::tuple and std::array
+* optimised log2n recursion
+* lambdas & void/non void functors + streaming
+* variadic parameters
+* C++11
+* streaming
+* NVI for childs
 
 example of sending tuple/array to a stream:  
 ```cpp
