@@ -1,4 +1,4 @@
-.PHONY: clean
+.PHONY: clean all release debug
 
 PROJECT = StaticWalker
 PROJECT_DIR = static_walker_std11
@@ -9,20 +9,28 @@ LIB_DIR =
 LDFLAGS =
 OUTPUT_DIR = ../$(PROJECT_DIR)/bin
 OUTPUT = $(OUTPUT_DIR)/$(EXE_FILE)
-CPPFLAGS = -ggdb -std=c++11 -Wextra -Wall -pedantic
-#CPPFLAGS = -Os -std=c++11 -Wextra -Wall -pedantic -s
+
 SRC_DIR := ../$(PROJECT_DIR)
 OBJ_DIR := $(OUTPUT_DIR)
 SRC_FILES := $(wildcard $(SRC_DIR)/*.cpp)
 OBJ_FILES := $(patsubst $(SRC_DIR)/%.cpp,$(OBJ_DIR)/%.o,$(SRC_FILES))
-cxx := g++ -Wno-deprecated
+
+CXXFLAGS = -std=c++11 -Wextra -Wall -pedantic 
+CXX := g++
+
+all: $(OUTPUT)
+
+debug: CXXFLAGS += -O0 -DDEBUG -ggdb
+debug: $(OUTPUT)
+
+release: CXXFLAGS += -Os -s -fno-rtti
+release: $(OUTPUT)
 
 $(OUTPUT): $(OBJ_FILES)
-	$(cxx) -o $@ $^ $(LDFLAGS)
+	$(CXX) -o $@ $^ $(LDFLAGS)
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp
-	$(cxx) $(INCLUDE_DIR) $(CPPFLAGS) -c -o $@ $<
+	$(CXX) $(INCLUDE_DIR) $(CXXFLAGS) -c -o $@ $<
 
 clean:
-	rm -f $(OUTPUT_DIR)/*.o
-	rm -f $(OUTPUT_DIR)/*.exe
+	rm -vf $(OUTPUT_DIR)/*.o $(OUTPUT)

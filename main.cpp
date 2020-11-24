@@ -63,7 +63,11 @@ public:
     a.Set<CourseDetails_t,eMyClassMember_Special>(std::make_tuple("chemistry",time_t(19),23));
     a.Say();
 
+#ifdef DEBUG
     std::cout<<rtti::TypeName<Student>()<<": ["<<a<<"]"<<'\n';
+#else
+    std::cout<<"["<<a<<"]"<<'\n';
+#endif //DEBUG
 }
 
 int main()

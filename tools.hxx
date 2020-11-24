@@ -3,7 +3,6 @@
 #include <tuple>
 #include <utility>
 
-#define DEBUG
 #ifdef DEBUG
 #include <typeinfo>
 #include <cxxabi.h>
