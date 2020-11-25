@@ -53,6 +53,14 @@ struct has_StreamOut
         "Second template parameter must be a function type.");
 };
 
+template<typename, typename T>
+struct has_StreamIn
+{
+    // specialization that doesn't make checking
+    static_assert(std::integral_constant<T, false>::value,
+        "Second template parameter must be a function type.");
+};
+
 template<typename C, typename Ret, typename... Args>
 class has_StreamOut<C, Ret(Args...)>
 {
@@ -75,6 +83,29 @@ class has_StreamOut<C, Ret(Args...)>
 public:
     static constexpr bool value = type::value;
 };//has_StreamOut
+
+template<typename C, typename Ret, typename... Args>
+class has_StreamIn<C, Ret(Args...)>
+{
+    template<typename T>
+    static constexpr std::true_type check(T, typename
+        std::enable_if<
+            std::is_same<
+                decltype(std::declval<T>()->StreamIn(std::declval<Args>()...)),Ret
+            >::value>::type *def = nullptr);
+
+    template<typename>
+    static constexpr std::false_type check(...);
+    typedef decltype(check<typename std::remove_reference<C>::type *>(0)) type;
+    has_StreamIn() = delete;
+    has_StreamIn(const has_StreamIn &) = delete;
+    has_StreamIn(has_StreamIn &&) = delete;
+    has_StreamIn &operator=(const has_StreamIn &) = delete;
+    has_StreamIn &operator=(has_StreamIn &&) = delete;
+
+public:
+    static constexpr bool value = type::value;
+};//has_StreamIn
 
 template<typename C>
 struct isConvertibleToString {

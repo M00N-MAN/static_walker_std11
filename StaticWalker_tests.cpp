@@ -5,26 +5,26 @@
 template<typename Container, typename... Args>
 void test_runtime_get_no_return(Container &&c,Args &&...args)
 {
-    StreamerVOID<std::ostream,','> s(std::cout);
+    StreamOutFunctor_void<std::ostream,','> s(std::cout);
     for (int i=GetSize()(c)-1; i>=1; --i)
         StaticWalker::runtime_get(c, i,s,i+1,args...);
-    StaticWalker::runtime_get(c, 0,StreamerVOID<std::ostream>(std::cout),1,args...);
+    StaticWalker::runtime_get(c, 0,StreamOutFunctor_void<std::ostream>(std::cout),1,args...);
 }
 
 template<typename Container, typename... Args>
 void test_runtime_get_return(Container &&c,Args &&...args)
 {
-    Streamer<std::ostream,','> sS(std::cout);
+    StreamOutFunctor_non_void<std::ostream,','> sS(std::cout);
     for(size_t i=0;i!=GetSize()(c)-1;++i)
         std::cout<<"r:"<<StaticWalker::runtime_get(c, i, sS,i+1,args...);
-    std::cout<<"r:"<<StaticWalker::runtime_get(c, GetSize()(c)-1, Streamer<std::ostream>(std::cout),GetSize()(c),args...);
+    std::cout<<"r:"<<StaticWalker::runtime_get(c, GetSize()(c)-1, StreamOutFunctor_non_void<std::ostream>(std::cout),GetSize()(c),args...);
 }
 
 template<typename Container, typename... Args>
 void test_runtime_range(Container &&c,Args &&...args)
 {//issue: range is only ascending by streamingImplNs_. need something like iterable diapason
-    StaticWalker::runtime_range(c, 0,GetSize()(c)-2, StreamerVOID<std::ostream,','>(std::cout),args...);
-    StaticWalker::runtime_get(c, GetSize()(c)-1, StreamerVOID<std::ostream>(std::cout),GetSize()(c),args...);
+    StaticWalker::runtime_range(c, 0,GetSize()(c)-2, StreamOutFunctor_void<std::ostream,','>(std::cout),args...);
+    StaticWalker::runtime_get(c, GetSize()(c)-1, StreamOutFunctor_void<std::ostream>(std::cout),GetSize()(c),args...);
 }
 
 void runWalkerTests()
